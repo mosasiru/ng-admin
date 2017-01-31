@@ -9,8 +9,8 @@ describe('directive: ma-embedded-list-field', function () {
     angular.module('testapp_EmbeddedListField', [])
         .directive('translate', () => ({
             restrict: 'A',
-            scope: { translate: '@' },
-            template: '{{ translate }}'
+            scope: { translate: '@', translateValues: '=' },
+            template: '{{ translate }} {{ translateValues.name }}'
         }))
         .directive('maEmbeddedListField', directive)
         .directive('maField', function() {
@@ -45,6 +45,18 @@ describe('directive: ma-embedded-list-field', function () {
         expect(element.find('a').eq(1).text().trim()).toBe('REMOVE');
         expect(element.find('input').eq(2).scope().value).toBe(2);
         expect(element.find('input').eq(3).scope().value).toBe('bar');
-        expect(element.find('a').eq(2).text().trim()).toBe('ADD_NEW');
+        expect(element.find('a').eq(2).text().trim()).toBe('ADD_NEW dummy');
+    });
+
+    describe('Add Button', () => {
+        it('should display lower-cased label', () => {
+            scope.field = new EmbeddedListField('dummy_field')
+                .label('Awesome Entity');
+
+            var element = $compile(directiveUsage)(scope);
+            scope.$digest();
+
+            expect(element[0].querySelector('span[translate]').textContent.trim()).toBe('ADD_NEW awesome entity');
+        });
     });
 });

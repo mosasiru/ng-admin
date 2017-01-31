@@ -1,4 +1,4 @@
-/* globals _ */
+const debounce = require('lodash.debounce');
 
 export default class ListLayoutController {
     constructor($scope, $stateParams, $state, $location, $timeout, view, dataStore) {
@@ -27,14 +27,13 @@ export default class ListLayoutController {
                 if ($location.path() !== this.path) {
                     return; // already transitioned to another page
                 }
-                this.search = ListLayoutController.getCurrentSearchParam($location, this.filters);
                 this.enabledFilters = this.getEnabledFilters();
             }
         );
         // apply filters when filter values change
         $scope.$watch(
             () => this.search,
-            _.debounce((newValues, oldValues) => {
+            debounce((newValues, oldValues) => {
                 if (newValues != oldValues) {
                     this.updateFilters();
                 }

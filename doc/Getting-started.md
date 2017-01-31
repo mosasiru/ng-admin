@@ -207,7 +207,7 @@ The `_page`, `_perPage`, `_sortDir`, and `_sortField` query parameters are added
 
 http://jsonplaceholder.typicode.com/users?_start=1&_end=30&_order=DESC&_sort=id
 
-But it's very easy to map the two flavors. Ng-admin relies on a powerful REST client called [Restangular](https://github.com/mgonto/restangular). To configure Restangular, you must write an *interceptor*, which is a simple function receiving the response from the web server and transforming it before it is passed to ng-admin.
+But it's very easy to map the two flavors. Ng-admin relies on a powerful REST client called [Restangular](https://github.com/mgonto/restangular). To configure Restangular, you must write an *interceptor*, which is a simple function intercepting the request in order to transform it before it is passed to ng-admin.
 
 Here is the configuration script required to map the JSONPlaceholder REST flavor with ng-admin REST flavor:
 
@@ -340,8 +340,6 @@ post.showView().fields([
 
 The `referenced_list` field type displays a datagrid for one-to-many relationships. In this examples, by specifying how comments and posts are related (via the `postId` field in the referenced `comments`), ng-admin manages to fetch related entities.
 
-As a side note, you can see that it's possible to create a reference to a non-existent entity (`nga.entity('comments)` creates the related entity for the occasion).
-
 The new post show view is directly accessible from the listView, by clicking on the id of a post in the list.
 
 ![post show view with related comments](images/post_show_view_with_related_comments.png)
@@ -462,7 +460,7 @@ user.editionView().fields(user.creationView().fields());
 
 ## Making Lists Searchable With Filters
 
-One of the main tasks you have to achieve achieve on list views is searching for specific entries. The current post list isn't very searchable... Let's add filters!
+One of the main tasks you have to achieve on list views is searching for specific entries. The current post list isn't very searchable... Let's add filters!
 
 The `/posts` endpoint from JSONPlaceholder accepts query parameters to filter the results. For instance, to list posts where any of the fields (title or body) contains the string "foo", and where the id of the author is 1234, you can query the following route:
 
@@ -604,6 +602,9 @@ myApp.config(['NgAdminConfigurationProvider', function (nga) {
     var admin = nga.application('My First Admin')
       .baseApiUrl('http://jsonplaceholder.typicode.com/'); // main API endpoint
 
+    var comment = nga.entity('comments'); // the API endpoint for users will be 'http://jsonplaceholder.typicode.com/comments/:id
+    admin.addEntity(comment);
+    
     var user = nga.entity('users'); // the API endpoint for users will be 'http://jsonplaceholder.typicode.com/users/:id
         user.listView()
         .fields([
