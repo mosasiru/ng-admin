@@ -10,16 +10,17 @@ export default class RestWrapper {
      *
      * @param {String} entityName
      * @param {String} url
+     * @param {String} jethod
      *
      * @returns {promise}
      */
-    getOne(entityName, url) {
-        return this.Restangular
-            .oneUrl(entityName, url)
-            .get()
-            .then(function (response) {
-                return response.data;
-            });
+    getOne(entityName, url, method) {
+        var resource = this.Restangular.oneUrl(entityName, url),
+            operation = method ? resource.customOperation(method, null, {}, {}, rawEntity) : resource.get();
+
+        return operation.then(function (response) {
+            return response.data;
+        });
     }
 
     /**
@@ -28,13 +29,15 @@ export default class RestWrapper {
      * @param {Object} params
      * @param {String} entityName
      * @param {String} url
+     * @param {String} method
      *
      * @returns {promise}
      */
-    getList(params, entityName, url) {
-        return this.Restangular
-            .allUrl(entityName, url)
-            .getList(params);
+    getList(params, entityName, url, method) {
+        var resource = this.Restangular.allUrl(entityName, url),
+            operation = method ? resource.customOperation(method, null, {}, {}, params) : resource.getList(params);
+
+        return operation;
     }
 
     createOne(rawEntity, entityName, url, method) {
