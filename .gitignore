@@ -6,7 +6,6 @@ examples/blog/build
 node_modules
 npm-debug.log
 src/css
-src/javascripts/bower_components
 src/javascripts/config.js
 src/javascripts/test/fixtures/examples/blog
 src/styles/*.css
